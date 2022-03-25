@@ -1,3 +1,5 @@
+-- IP helpers --
+
 local function ip2int (s)
     -- transform ip string to an integer representation
     local d1, d2, d3, d4 = s:match("(%d+)%.(%d+)%.(%d+)%.(%d+)");
@@ -25,6 +27,8 @@ local function iMask(s)
 end
 
 local function iprange2cidr(ipstart, ipend)
+    -- tranform a range of ip's to cidr notation so ufw understands it
+    -- assumes that an equivalent cidr notation exists
     local startR = ip2int(ipstart)
     local endR = ip2int(ipend)
 
@@ -55,25 +59,8 @@ local function iprange2cidr(ipstart, ipend)
     return result
 end
 
-local function test()
-    local ip1 = "192.168.10.200"
-    local ip2 = "192.168.11.120"
-
-    print(ip1)
-    print(ip2int(ip1))
-    print(int2ip(ip2int(ip1)))
-
-    -- test:
-    for _, l in ipairs(iprange2cidr(ip1, ip2)) do
-        print(l);
-    end
-
-    print("-- expected result:")
-    print("192.168.10.200/29")
-    print("192.168.10.208/28")
-    print("192.168.10.224/27")
-    print("192.168.11.0/26")
-    print("192.168.11.64/27")
-    print("192.168.11.96/28")
-    print("192.168.11.112/29")
-end
+return {
+    ip2int = ip2int,
+    int2ip = int2ip,
+    iprange2cidr = iprange2cidr
+}

@@ -1,3 +1,5 @@
+local ipu = dofile "./iputils.lua"          -- IP utils
+
 local function testFilter(filters)
     local testlog = {
     "Jan 19 00:51:53 hostname sshd[1057]: Disconnecting authenticating user username 67.235.197.136 port 45174: Too many authentication failures [preauth]",
@@ -21,6 +23,30 @@ local function testFilter(filters)
     return counter == #testlog;
 end
 
+local function testIPutils()
+    local ip1 = "192.168.10.200"
+    local ip2 = "192.168.11.120"
+
+    print(ip1)
+    print(ipu.ip2int(ip1))
+    print(ipu.int2ip(ipu.ip2int(ip1)))
+
+    -- test:
+    for _, l in ipairs(ipu.iprange2cidr(ip1, ip2)) do
+        print(l);
+    end
+
+    print("-- expected result:")
+    print("192.168.10.200/29")
+    print("192.168.10.208/28")
+    print("192.168.10.224/27")
+    print("192.168.11.0/26")
+    print("192.168.11.64/27")
+    print("192.168.11.96/28")
+    print("192.168.11.112/29")
+end
+
 return {
-    testFilter = testFilter
+    testFilter = testFilter,
+    testIPutils = testIPutils
 }
